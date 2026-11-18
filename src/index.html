@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:">
+  <title>Prospect Finder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Prospect Finder</h1>
+    <button id="sheetBadge" class="badge" type="button">Google Sheet: not connected</button>
+  </header>
+
+  <main>
+    <section class="card">
+      <form id="runForm">
+        <div class="grid">
+          <label>Niche / service
+            <input id="niche" list="niches" placeholder="e.g. dentist" required autocomplete="off">
+            <datalist id="niches">
+              <option value="dentist"><option value="plumber"><option value="HVAC"><option value="roofer">
+              <option value="chiropractor"><option value="electrician"><option value="personal injury lawyer">
+              <option value="med spa"><option value="veterinarian"><option value="auto repair">
+              <option value="landscaper"><option value="pest control">
+            </datalist>
+          </label>
+          <label>Country
+            <select id="country">
+              <option value="US">United States</option>
+              <option value="GB">United Kingdom</option>
+              <option value="CA">Canada</option>
+              <option value="AU">Australia</option>
+              <option value="NZ">New Zealand</option>
+              <option value="IE">Ireland</option>
+            </select>
+          </label>
+          <div class="field">
+            <label for="city">City</label>
+            <div class="combo">
+              <input id="city" placeholder="Start typing a city" required autocomplete="off" spellcheck="false"
+                role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="cityList">
+              <ul id="cityList" class="comboList" role="listbox" aria-label="Cities" hidden></ul>
+            </div>
+          </div>
+          <label>Sites to check
+            <select id="count">
+              <option>5</option><option>6</option><option>7</option><option selected>8</option><option>9</option><option>10</option>
+            </select>
+          </label>
+          <label>Skip top results
+            <select id="skipTop">
+              <option>0</option><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option>
+            </select>
+          </label>
+        </div>
+        <div class="actions">
+          <button id="runBtn" class="primary" type="submit">Run</button>
+          <button id="stopBtn" type="button" hidden>Stop</button>
+          <label class="check"><input id="showBrowser" type="checkbox" checked> Show the browser while it works</label>
+        </div>
+      </form>
+      <p id="countryNote" class="attention" hidden></p>
+      <p id="status" class="status" role="status">Enter a niche and a city, then press Run.</p>
+      <p id="attention" class="attention" hidden></p>
+    </section>
+
+    <section class="card" id="resultCard" hidden>
+      <div class="resultHead">
+        <h2 id="resultTitle">Results</h2>
+        <div class="score" id="score"></div>
+      </div>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr><th title="Serial number in your sheet">#</th><th>Business</th><th>FAQ</th><th>Service pages</th><th>Schema</th><th>Result</th><th>Priority</th><th>Phone and mobile</th><th>Schema detail</th><th>Agency credit</th><th>Owner and email</th><th>Other</th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="actions">
+        <button id="openSheet" type="button" hidden>Open Google Sheet</button>
+        <button id="copyRows" type="button" hidden>Copy rows (paste into the sheet)</button>
+        <span id="savedNote" class="muted"></span>
+      </div>
+    </section>
+
+    <section class="card" id="pipeCard">
+      <div class="resultHead">
+        <h2>Replies and follow-ups</h2>
+        <button id="pipeBtn" type="button">Check Gmail for replies</button>
+      </div>
+      <p id="pipeMsg" class="muted">Checks your Gmail for answers and bounces from the businesses you emailed, updates each one's Status in the sheet, and prepares what to do next. It runs by itself when the app opens.</p>
+      <div id="scoreLine" class="scoreLine" hidden></div>
+      <div id="replyBox" hidden>
+        <h3>New replies</h3>
+        <div id="replyList"></div>
+      </div>
+      <div id="fupBox" hidden>
+        <h3 id="fupTitle">Follow-ups due</h3>
+        <p class="muted small">No answer after 4 days. One short follow-up in the same thread, then never again.</p>
+        <div id="fupList" class="mailList"></div>
+        <div class="actions">
+          <button id="fupDraftBtn" class="primary" type="button">Create follow-up drafts</button>
+          <button id="fupSendBtn" type="button">Send now</button>
+          <button id="fupStopBtn" type="button" hidden>Stop sending</button>
+        </div>
+        <p id="fupStatus" class="status" role="status"></p>
+      </div>
+      <div class="actions" id="pipeActions" hidden>
+        <button id="openScore" type="button">Open scorecard</button>
+      </div>
+    </section>
+
+    <section class="card" id="reportCard">
+      <h2>Audit report</h2>
+      <p class="muted">Someone asked for the breakdown? Type their serial number from the <b>#</b> column of your sheet, or paste their email address, website or business name.</p>
+      <div class="row">
+        <input id="reportQuery" placeholder="e.g. 12, manager@clinic.com, clinic.com or Plaza Family" autocomplete="off" spellcheck="false">
+        <button id="reportBtn" class="primary" type="button">Load report</button>
+      </div>
+      <p id="reportMsg" class="muted"></p>
+      <div id="reportPick" class="pickList" hidden></div>
+      <div id="reportOut" hidden>
+        <div class="resultHead">
+          <h3 id="reportTitle"></h3>
+          <span id="reportMeta" class="muted small"></span>
+        </div>
+        <div class="tabs" role="tablist">
+          <button id="reportTabReply" class="tab on" type="button" role="tab" aria-selected="true">Reply email (report + your two offers)</button>
+          <button id="reportTabReport" class="tab" type="button" role="tab" aria-selected="false">Report only</button>
+        </div>
+        <textarea id="reportText" rows="22" spellcheck="true" aria-label="Report text"></textarea>
+        <div class="actions">
+          <button id="reportCopy" type="button">Copy</button>
+          <button id="reportDraft" type="button">Create Gmail draft reply</button>
+          <span id="reportStatus" class="muted small"></span>
+        </div>
+        <p class="muted small">Edit anything before copying. The report is written from what the app found on their site; your offers come from "Email settings and template". "Create Gmail draft reply" puts it in your Drafts as a reply in their thread (only when they have emailed you).</p>
+      </div>
+    </section>
+
+    <section class="card" id="loadCard">
+      <h2>Email weak sites from earlier runs</h2>
+      <p class="muted">Load the WEAK rows back from your sheet for any day or period, then draft or send their emails.</p>
+      <div class="loadGrid">
+        <label>Which days
+          <select id="loadRange">
+            <option value="latest">Most recent day</option>
+            <option value="today">Today</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="thisWeek">This week (Mon to today)</option>
+            <option value="lastWeek">Last week (Mon to Sun)</option>
+            <option value="last7">Last 7 days</option>
+            <option value="last14">Last 14 days</option>
+            <option value="last30">Last 30 days</option>
+            <option value="thisMonth">This month</option>
+            <option value="all">All days</option>
+            <option value="day">One specific day</option>
+            <option value="custom">Custom dates</option>
+          </select>
+        </label>
+        <label id="loadDayWrap" hidden>Day
+          <select id="loadTab"><option value="">Press Load once to list your days</option></select>
+        </label>
+        <label id="loadFromWrap" hidden>From
+          <input id="loadFrom" type="date">
+        </label>
+        <label id="loadToWrap" hidden>To
+          <input id="loadTo" type="date">
+        </label>
+      </div>
+      <div class="actions">
+        <button id="loadBtn" type="button">Load weak sites</button>
+        <label class="check"><input id="hideContacted" type="checkbox" checked> Hide businesses already emailed or with a draft waiting</label>
+      </div>
+      <p id="loadMsg" class="muted"></p>
+    </section>
+
+    <section class="card" id="emailCard" hidden>
+      <div class="resultHead">
+        <h2>Next step: email the weak sites</h2>
+        <div class="muted" id="emailCounter"></div>
+      </div>
+      <p class="muted" id="emailIntro"></p>
+      <div id="emailList" class="mailList"></div>
+      <div class="actions">
+        <button id="draftBtn" class="primary" type="button">Create Gmail drafts</button>
+        <button id="sendBtn" type="button">Send now</button>
+        <button id="emailStopBtn" type="button" hidden>Stop sending</button>
+      </div>
+      <p id="emailStatus" class="status" role="status"></p>
+      <p class="muted small">Drafts land in your Gmail Drafts folder so you can read and send them yourself. "Send now" sends from your Gmail one at a time with a pause of a few minutes between emails; keep this window open until it finishes.</p>
+    </section>
+
+    <details class="card" id="sheetCard">
+      <summary>Google Sheet and Gmail connection</summary>
+      <p class="muted">One-time setup, about 2 minutes. After this every run is written to your sheet, in a tab named with that day's date (today: <b id="todayTab"></b>), and emails can be drafted or sent from your Gmail.</p>
+      <ol>
+        <li>In a browser signed in <b>only</b> as the Google account you send outreach from (a private window is easiest), go to <b>sheets.new</b> to make a blank sheet and give it a name, for example <i>AI visibility outreach</i>. The app creates all the tabs itself. Emails go out from whichever account does these steps.</li>
+        <li>Menu <b>Extensions &gt; Apps Script</b>. Delete whatever code is there.</li>
+        <li><button id="copyScript" type="button">Copy the connector code</button> and paste it in. Press Save.</li>
+        <li><b>Deploy &gt; New deployment</b>. Type: <b>Web app</b>. Execute as: <b>Me</b>. Who has access: <b>Anyone</b>. Press Deploy. Google shows "Google hasn't verified this app" because the script is your own: choose <b>Advanced &gt; Go to project</b> and allow it.</li>
+        <li>Copy the <b>Web app URL</b> and paste it here:</li>
+      </ol>
+      <div class="row">
+        <input id="webhook" placeholder="https://script.google.com/macros/s/.../exec" spellcheck="false">
+        <button id="testSheet" type="button">Connect</button>
+      </div>
+      <p id="sheetMsg" class="muted"></p>
+      <div id="otherPc" hidden>
+        <p class="muted"><b>For your other PCs:</b> you do not repeat the steps above. Copy this connection code and paste it into the same box in the app on the other PC. Keep it private; it is the key to your sheet and Gmail connection.</p>
+        <button id="copyConn" type="button">Copy connection code</button>
+      </div>
+      <p class="muted small">Changing the connector later: paste the new code, then Deploy &gt; Manage deployments &gt; Edit &gt; Version: New version. The URL stays the same.</p>
+      <label class="block">Never check businesses whose name contains (comma separated)
+        <textarea id="skipNames" rows="2" spellcheck="false"></textarea>
+      </label>
+    </details>
+
+    <details class="card" id="emailSettings">
+      <summary>Email settings and template</summary>
+      <div class="grid three">
+        <label>Your name (shown as the sender)
+          <input id="senderName" placeholder="e.g. Hasan Zafar" autocomplete="off">
+        </label>
+        <label>Your postal address (required by law in every email)
+          <input id="senderAddress" placeholder="Street, City, State ZIP, Country" autocomplete="off">
+        </label>
+        <label>Most emails to send per day
+          <select id="dailyCap"><option>5</option><option selected>10</option><option>15</option><option>20</option><option>30</option><option>40</option></select>
+        </label>
+      </div>
+      <label class="block">Subject
+        <input id="subject" spellcheck="true">
+      </label>
+      <label class="block">Message
+        <textarea id="body" rows="13" spellcheck="true"></textarea>
+      </label>
+      <p class="muted small">Placeholders are filled in for each business: <code>{{greeting}}</code> (the owner's name when the site shows it, otherwise "there") <code>{{business}}</code> <code>{{website}}</code> <code>{{niche}}</code> <code>{{city}}</code> <code>{{customers}}</code> (patients, homeowners, clients...) <code>{{opener}}</code> (their Google rating as a compliment when it is good) <code>{{findings}}</code> (what that site is missing, in plain words) <code>{{missing}}</code> (two or three) <code>{{proof}}</code> (a competitor from the same search that already has it; left out when there is none) <code>{{sender}}</code> <code>{{address}}</code>. Keep the last line that lets people say no.</p>
+
+      <h3>Your two offers (go into the reply and the audit report email)</h3>
+      <p class="muted small">Filled in with placeholder 2026 US prices. Until you tick the box below, replies show "[YOUR OFFER GOES HERE]" instead, so a placeholder price can never reach a client by accident.</p>
+      <label class="check readyBox"><input id="offersReady" type="checkbox"> Use these offers in replies (tick once these are your real offers and prices)</label>
+      <p class="muted small"><b>Option 1: fix their current website</b></p>
+      <div class="grid three">
+        <label>Offer name
+          <input id="offerName" autocomplete="off">
+        </label>
+        <label>What is included
+          <input id="offerIncludes" autocomplete="off">
+        </label>
+        <label>Price
+          <input id="offerPrice" autocomplete="off">
+        </label>
+      </div>
+      <div class="grid three">
+        <label>Delivery time
+          <input id="offerTimeline" autocomplete="off">
+        </label>
+        <label>Booking link (Calendly or similar, optional)
+          <input id="bookingLink" placeholder="https://" autocomplete="off" spellcheck="false">
+        </label>
+        <span></span>
+      </div>
+      <p class="muted small"><b>Option 2: a new AI-ready website you build and look after</b></p>
+      <div class="grid three">
+        <label>Offer name
+          <input id="offer2Name" autocomplete="off">
+        </label>
+        <label>What is included
+          <input id="offer2Includes" autocomplete="off">
+        </label>
+        <label>Price
+          <input id="offer2Price" autocomplete="off">
+        </label>
+      </div>
+      <label class="block">Reply when someone answers (drafted for you, never sent automatically)
+        <textarea id="replyBody" rows="9" spellcheck="true"></textarea>
+      </label>
+      <p class="muted small"><code>{{summary}}</code> is the full website breakdown for that business (the same as the Audit report). <code>{{offer}}</code> is your two offers above.</p>
+      <label class="block">Follow-up after 4 days without an answer
+        <textarea id="followUpBody" rows="7" spellcheck="true"></textarea>
+      </label>
+      <div class="actions"><button id="resetTemplate" type="button">Restore the original templates</button><span id="settingsSaved" class="muted"></span></div>
+    </details>
+
+    <details class="card">
+      <summary>How the whole process works</summary>
+      <ol>
+        <li><b>Find.</b> Run a niche and city. Weak sites are scored and given a Priority (High, Medium, Low) from their Google reviews, how weak the site is, whether a personal email and owner name were found, and whether an agency already looks after the site.</li>
+        <li><b>Email.</b> Review the first emails, best prospects first, and create drafts or send. The Status column in the sheet changes to <i>drafted</i> or <i>sent</i>.</li>
+        <li><b>Check replies.</b> Open the app (or press "Check Gmail for replies"). Anyone who answered is marked <i>replied</i>, and a reply containing their audit summary and your offer is waiting in your Gmail Drafts. Read it, adjust it, send it.</li>
+        <li><b>Follow up once.</b> After 4 days of silence the business appears under "Follow-ups due". One short follow-up, then it is left alone.</li>
+        <li><b>Record the outcome.</b> In the sheet, set the Status dropdown to <i>call booked</i>, <i>won</i> or <i>lost</i>. The app never overwrites those.</li>
+        <li><b>Read the scorecard.</b> The Scorecard tab shows reply rate, calls and wins for each niche and city. Keep the searches that get replies and drop the ones that do not.</li>
+      </ol>
+      <p class="muted small">"No thanks" replies and bounced addresses go to the Do Not Contact tab automatically.</p>
+    </details>
+
+    <details class="card">
+      <summary>Sending limits and how to stay out of spam</summary>
+      <h3>Limits built into this app</h3>
+      <ul>
+        <li>Only sites marked WEAK that publish an email address get an email, and only after you press a button.</li>
+        <li>At most your daily number (never above <b id="hardCap">40</b>) per day, counted in your sheet so it holds across all your PCs.</li>
+        <li>A pause of <b id="gapText">1.5 to 4</b> minutes between two emails, so they do not go out as a burst.</li>
+        <li>Nobody is emailed twice: every draft and send is recorded in the <b>Email Log</b> tab.</li>
+        <li>Anyone listed in the <b>Do Not Contact</b> tab (an address or a whole domain) is always skipped. When someone replies "no thanks", add them there the same day.</li>
+        <li>Plain text only, no tracking pixels, no attachments.</li>
+      </ul>
+      <h3>Google's limits</h3>
+      <ul>
+        <li>A free @gmail.com account can send to about 500 recipients a day, but only about 100 a day through a connector like this one. Google Workspace allows about 2,000 and 1,500. Going over locks sending for up to 24 hours.</li>
+        <li>Gmail expects the share of your emails that recipients mark as spam to stay under 0.3%, and ideally under 0.1%. With 10 emails a day, a single spam report is already far over that, so relevance matters more than volume.</li>
+        <li>Mail from your own domain must pass SPF and DKIM checks or Gmail may reject it. Anyone sending 5,000+ a day also needs DMARC and one-click unsubscribe; you are far below that.</li>
+      </ul>
+      <h3>What keeps you in the inbox</h3>
+      <ul>
+        <li><b>Start slow.</b> Week 1: 5 to 10 a day. Week 2: 15 to 20. Stay at or under 30 to 40 per mailbox after that. A new or rarely used mailbox that suddenly sends 50 cold emails gets flagged.</li>
+        <li><b>Use a separate domain for outreach</b> (for example a variation of your business name on Google Workspace), with SPF, DKIM and DMARC set up, and use it normally for 2 to 3 weeks first. A free @gmail.com works for very small volume but looks less trustworthy and puts your personal account at risk.</li>
+        <li><b>Send on weekdays in business hours</b>, and reply quickly to anyone who answers. Replies are the strongest signal that your mail is wanted.</li>
+        <li><b>Keep the first email short, specific and link-free.</b> The findings line about their own site is what makes it not look like bulk mail. Edit each one a little if you can.</li>
+        <li><b>Prefer a personal address</b> over info@ or office@. Generic mailboxes are read by staff and are more likely to report spam.</li>
+        <li><b>One follow-up at most</b>, 4 to 5 days later, sent by hand as a reply to your first email. Then stop.</li>
+        <li><b>Watch for bounces.</b> If more than 1 in 20 addresses bounce, pause and check the addresses before sending more.</li>
+      </ul>
+      <h3>The law (US, CAN-SPAM)</h3>
+      <ul>
+        <li>Say honestly who you are and what the email is about. No misleading subject lines.</li>
+        <li>Include a real postal address (a registered office or PO box is fine).</li>
+        <li>Give a way to opt out and honor it within 10 business days. Here that means adding them to Do Not Contact.</li>
+        <li>These rules are for US businesses. For the other countries in the app:</li>
+        <li><b>UK and Ireland:</b> cold email to companies (Ltd, LLP, PLC) is allowed with your identity and an opt-out. Sole traders and partnerships need consent first.</li>
+        <li><b>Canada (CASL):</b> consent is normally needed first. The common exception is an address the business publishes on its own site, a message about their business, and no "no unsolicited email" notice on the site.</li>
+        <li><b>Australia and New Zealand:</b> similar to Canada: a published business address plus a message relevant to their business, unless the site says otherwise.</li>
+        <li>This is general guidance, not legal advice. Outside the US, create drafts and check each site before sending.</li>
+      </ul>
+    </details>
+
+    <details class="card">
+      <summary>Activity log</summary>
+      <pre id="log"></pre>
+    </details>
+
+    <p class="muted small foot">This app keeps no results on this PC. Everything goes to your Google Sheet; the browsing data is erased after every run. The only thing saved here is one small settings file. City lists from GeoNames (geonames.org), CC BY 4.0.</p>
+  </main>
+  <script src="cities.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

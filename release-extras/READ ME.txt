@@ -1,0 +1,167 @@
+PROSPECT FINDER
+===============
+
+Works on any Windows 10/11 PC. Nothing to install, no Node.js, no Claude needed.
+
+SET UP ON A NEW PC
+  1. Copy this whole "Prospect Finder App" folder to the PC
+     (somewhere it will stay, e.g. Documents).
+  2. Double-click "Create Desktop Shortcut.bat".
+  3. A "Prospect Finder" icon appears on the desktop. Open it.
+
+  If you move this folder later, run "Create Desktop Shortcut.bat" again.
+  If Windows shows "Windows protected your PC", click More info > Run anyway.
+
+NOTHING IS STORED ON THE PC
+  The app keeps no results, no history and no browser data. Every run goes
+  straight to your Google Sheet, and the browsing data is erased after each
+  run. The only thing saved is one small settings file (your sheet
+  connection, your name and your email template).
+  This also means: if the sheet is not connected, results exist only on
+  screen. Use "Copy rows" before closing the app.
+
+CONNECT YOUR GOOGLE SHEET AND GMAIL (one time, about 2 minutes)
+  Open "Google Sheet and Gmail connection" inside the app and follow the
+  5 steps. Always use the "Copy the connector code" button in the app,
+  because it puts your private key into the code.
+
+  Do the steps in a browser signed in ONLY as the Google account you send
+  outreach from (a private window is easiest). Make a blank sheet at
+  sheets.new and give it a name; the app creates all tabs itself.
+  Emails are sent from whichever Google account deploys the connector.
+  If Deploy says "You do not have permission", you are signed into a
+  second Google account or the sheet belongs to another account.
+
+  On your other PCs you do not repeat those steps: on the first PC press
+  "Copy connection code", send it to yourself, and paste it into the same
+  box on the other PC. Keep that code private.
+
+HOW TO USE
+  1. Type the niche (e.g. dentist), pick the country (United States,
+     United Kingdom, Canada, Australia, New Zealand or Ireland), and
+     start typing the city: every city and town in that country is
+     suggested, largest first. Any place you type yourself also works.
+     Outside the US a note shows that country's cold-email rules.
+  2. Choose how many sites to check (5 to 10) and press Run.
+  3. A browser window opens and does the work: searches Google Maps,
+     skips the top 3, opens each next website and checks
+       - does each service have its own page
+       - is there FAQ content
+       - does the schema declare the business itself (Dentist, Plumber,
+         LocalBusiness...) and how complete it is. Automatic schema from
+         site builders (Organization, WebSite) counts as "no".
+     A site that fails 2 or 3 of those is marked WEAK.
+     It then opens the homepage as a phone would and checks
+       - does the site fit a phone screen (Mobile column)
+       - is there a tap-to-call button (Tap to Call column)
+       - does the phone number on the site match the Google listing
+         (Phone vs Google column)
+     It also notes the footer agency credit and any email on the site.
+     Every business gets a serial number in the "#" column of the sheet.
+  4. 8 sites take roughly 5 minutes. Leave the browser window alone
+     while it runs. If Google asks "I'm not a robot", tick it in that
+     window and the run continues by itself.
+  5. The rows are added to your sheet in a tab named with the date
+     (e.g. "Nov 16, 2026"). A new day gets a new tab automatically.
+     Businesses already anywhere in the sheet are not checked again.
+
+THE WHOLE PROCESS, STEP BY STEP
+  1. FIND. Run a niche and city. Every weak site gets a Priority
+     (High, Medium, Low) based on its Google reviews, how weak the site
+     is, whether a personal email and the owner's name were found, and
+     whether an agency already looks after the site.
+
+  2. EMAIL. Under "Next step: email the weak sites" there is a
+     ready-written email for every weak site that publishes an address,
+     best prospects first, greeting the owner by name when the site
+     shows it. Fill in "Email settings and template" first (your name
+     and postal address are required). Read each email, then choose:
+       Create Gmail drafts - puts them in Gmail > Drafts for you to send.
+                             Best choice while you are getting started.
+       Send now            - sends from your Gmail, one at a time, with a
+                             pause of 1.5 to 4 minutes between emails.
+                             Keep the app open until it finishes.
+     Emailing later? Use "Email weak sites from earlier runs" and pick
+     the days: most recent day, today, yesterday, this week, last week,
+     last 7 / 14 / 30 days, this month, all days, one specific day or
+     custom From and To dates. Businesses already emailed, or with a
+     draft waiting in Gmail, are hidden unless you untick that box.
+
+     DRAFTS YOU ARE NOT READY TO SEND: they stay in Gmail > Drafts as
+     long as you like. Send them from Gmail whenever you are ready; the
+     app notices on its next check, marks them sent and starts the
+     4-day follow-up clock from that day. They are never drafted twice.
+     If you delete a draft in Gmail instead, the app frees that
+     business so it can be emailed again later.
+
+  3. CHECK REPLIES. Every time the app opens (or when you press "Check
+     Gmail for replies") it looks in your Gmail for answers and bounces.
+       - Someone answered: they are marked "replied", and a reply with
+         their full website breakdown and your two offers is waiting in
+         Gmail > Drafts. Read it, adjust it and send it the same day.
+
+     AUDIT REPORT ON DEMAND: in the "Audit report" box, type the
+     business's serial number from the "#" column (or paste their email,
+     website or name) and press Load report. The full breakdown appears:
+     every problem found, most urgent first, what is already working,
+     and your two offers (fix their current site, or a new AI-ready
+     website you build and look after). Copy it, or press "Create Gmail
+     draft reply" to put it in your Drafts as a reply in their thread.
+       - Someone said "no thanks", or the address bounced: they go to the
+         "Do Not Contact" tab automatically.
+
+  4. FOLLOW UP ONCE. After 4 days without an answer the business shows
+     up under "Follow-ups due". One short follow-up in the same thread,
+     then it is left alone for good.
+
+  5. RECORD THE OUTCOME. In the sheet, each business has a Status
+     dropdown. Set it to "call booked", "won" or "lost" yourself. The
+     app never overwrites those.
+
+  6. READ THE SCORECARD. The "Scorecard" tab shows sites checked, weak,
+     emailed, replied, reply rate, calls and wins for every niche and
+     city. Keep the searches that get replies; drop the ones that do not.
+
+YOUR TWO OFFERS
+  The reply and the audit report email include two options, filled in
+  with placeholder 2026 US prices so the process is complete:
+    1. Fix their current website ("AI Visibility Fix", $950, 7 days)
+    2. A new AI-ready website you build and look after ($2,500 to
+       build, then $149 a month for hosting, updates and changes)
+  Change the names, what is included, the prices, the delivery time and
+  your booking link under "Email settings and template" when ready, then
+  tick "Use these offers in replies". Until you tick it, replies show
+  "[YOUR OFFER GOES HERE]" so a placeholder price never reaches a client.
+
+SAFEGUARDS
+    - Emails only go to addresses that belong to the business (its own
+      domain, a closely related one, or a Gmail/Outlook-type mailbox).
+      An address on another company's domain (often the web agency) and
+      placeholder addresses like "test@" or "crud@" are never used.
+    - If someone else at the business answers (for example the office
+      manager from their own address), it still counts as a reply: no
+      follow-up goes out, and the report reply goes to that person.
+    - Out-of-office and other automatic replies are not counted as an
+      answer, so the follow-up still happens.
+    - Text from websites and replies can never turn into a formula in
+      your sheet.
+    - FAQ and service-page findings are worded "I couldn't find...",
+      because the app only sees the pages it can reach.
+
+LIMITS BUILT IN SO YOUR MAIL STAYS OUT OF SPAM
+    - your daily number of emails (default 10, never more than 40),
+      follow-ups included
+    - a pause of 1.5 to 4 minutes between two emails
+    - nobody gets a first email twice, and nobody gets more than one
+      follow-up (see the "Email Log" tab)
+    - anyone in the "Do Not Contact" tab is always skipped
+
+  Read "Sending limits and how to stay out of spam" inside the app
+  before your first send. Short version: start with 5 to 10 a day,
+  send on weekdays, reply fast to anyone who answers, and move to a
+  separate outreach domain on Google Workspace once this works.
+
+IF YOU CONNECTED THE SHEET BEFORE THIS VERSION
+  Press "Copy the connector code" in the app, paste it over the old
+  code in Apps Script, then Deploy > Manage deployments > Edit >
+  Version: New version. The link stays the same.

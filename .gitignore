@@ -1,0 +1,16 @@
+# Installed packages and build output: recreated with "npm install" and "npm run build".
+node_modules/
+dist/
+devtest-*/
+
+# Never commit settings or connection details. The app keeps them in %APPDATA%\Prospect Finder,
+# outside this folder, but keep them out of git even if a copy ends up here.
+settings.json
+*.connection.txt
+.env
+
+# Windows / editor clutter
+Thumbs.db
+Desktop.ini
+.vscode/
+*.log
